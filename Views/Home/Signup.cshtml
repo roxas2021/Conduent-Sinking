@@ -1,0 +1,33 @@
+﻿@model Sample3.Models.UserData
+@{
+    ViewData["Title"] = "Sign Up";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container" style="height:91vh;">
+    <div class="container align-items-center border p-3" style="margin-top:70px;width:320px;border-radius:10px">
+        <form asp-action="LoginMember" method="post">
+            <div class="form-group d-flex justify-content-center" style="margin-bottom:35px; margin-top:20px">
+                <h3>SigIn Member</h3>
+            </div>
+            <div class="form-group d-flex justify-content-center">
+                <h6>Enter your Registered Member ID</h6>
+            </div>
+            <div class="form-group">
+                <input asp-for="memberid" class="form-control newradius" id="">
+            </div>
+            <div class="form-group d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary btn-radius" style="margin:10px">SignIn</button>
+                <input type="button" class="btn btn-primary btn-radius" value="Home" style="margin:10px" onclick="@("window.location.href='" + @Url.Action("Index", "Home") + "'");">
+            </div>
+        </form>
+    </div>
+</div>
+
+@{if (TempData["msg"] != null)
+    {
+        <script>
+            alert('@TempData["msg"]')
+        </script>
+    }
+}

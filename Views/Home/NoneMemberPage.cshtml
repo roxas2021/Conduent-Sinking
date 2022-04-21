@@ -1,0 +1,228 @@
+﻿
+
+@{
+    ViewData["Title"] = "Dashboard Page";
+    Layout = "/Views/Shared/_Layout2.cshtml";
+    string[] tableHeader = new string[] { "Amount", "Date Doposit", "Action" };
+    string[] loanHeader = new string[] { "", "Amount", "Date", "Action" };
+
+}
+
+<div ng-app="myApp" ng-controller="cntrl1">
+
+    <div class="container-fluid">
+        <div class="row p-sm-4" style="margin-top:50px">
+            <div class="col-sm-4">
+                <h3>Member Information</h3>
+                <div class="container my-3" style="border-top: groove; border-bottom:groove">
+                    <div class="form-group mx-auto d-block my-4 ">
+                        <div class="form-group" style="margin-left:20px">
+                            <h6>Member ID</h6>
+                        </div>
+                        <div class="form-group justify-content-center">
+                            <p class="form-control border-primary" style="border-radius:20px" id="getmemberid">@ViewData["MemberID"]</p>
+                        </div>
+                        <div class="form-group" style="margin-left:20px">
+                            <h6>Name</h6>
+                        </div>
+                        <div class="form-group justify-content-center">
+                            <p class="form-control border-primary" style="border-radius:20px" id="getfname">@ViewData["FName"]</p>
+                        </div>
+                        <div class="form-group" style="margin-left:20px">
+                            <h6>Contact No.</h6>
+                        </div>
+                        <div class="form-group justify-content-center">
+                            <p class="form-control border-primary" style="border-radius:20px" id="getcontactno">@ViewData["ContactNo"]</p>
+                        </div>
+                        <div class="form-group" style="margin-left:20px">
+                            <h6>Address</h6>
+                        </div>
+                        <div class="form-group justify-content-center">
+                            <p class="form-control border-primary" style="border-radius:20px" id="getaddress">@ViewData["Address"]</p>
+                        </div>
+                        <div class="form-group" style="margin-left:20px">
+                            <h6>Member Type</h6>
+                        </div>
+                        <div class="form-group justify-content-center">
+                            <p class="form-control border-primary" style="border-radius:20px" id="MemType">@ViewData["MemberType"]</p>
+                        </div>
+                        <div class="row d-flex justify-content-center">
+                            <input data-toggle="modal" data-target="#UpdateMember" ng-click="SendData()" type="button" class="btn btn-primary" value="Update" style="margin:10px;border-radius:25px;width:100px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="container">
+                    <h4>List of Loan</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" id="LoanDataTable">
+                            <thead>
+                                <tr>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                    <th style="visibility:hidden"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tloandata">
+                                @{
+                                    if (Model != null)
+                                    {
+                                        foreach (var Data in Model)
+                                        {
+                                            <tr>
+                                                <td>@Data.amount</td>
+                                                <td>@Data.loan_date</td>
+                                                <td>
+                                                    <input data-toggle="modal" data-target="#ApplyLoan" type="button" value="Edit" onclick="EditLoanRec()" />
+                                                    <input type="button" value="Delete" onclick="DeleteLoan()" />
+                                                    <input data-toggle="modal" data-target="#ViewLoanRec" type="button" value="View" onclick="ViewLoanRecord()" />
+                                                </td>
+                                                <td style="visibility:hidden">@Data.dbrecno</td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="container d-flex justify-content-center">
+                    <input data-toggle="modal" data-target="#ApplyLoan" onclick="ApplyLoan()" type="button" class="btn btn-primary" value="Apply Loan" style="border-radius:10px;width:auto;margin:10px">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*//--------Update Member Modal-------//*@
+    <div class="modal fade" id="UpdateMember" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="margin-top:80px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Update Member</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <h6>Member ID</h6>
+                            <p class="form-control border-primary" style="border-radius:20px">{{member2}}</p>
+                            <input id="memberid_up" class="form-control newradius" value="{{member2}}" type="hidden">
+                        </div>
+                        <div class="form-group">
+                            <h6>Full Name</h6>
+                            <input id="fname" class="form-control newradius" value="{{fname2}}">
+                        </div>
+                        <div class="form-group">
+                            <h6>Contact No.</h6>
+                            <input id="contactno" class="form-control newradius" value="{{contactno2}}">
+                        </div>
+                        <div class="form-group">
+                            <h6>Address</h6>
+                            <input id="address" class="form-control newradius" value="{{address2}}">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" onclick="UpdateMemberInfo()" class="btn btn-primary">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*//--------Apply Loan Modal-------//*@
+    <div class="modal fade" id="ApplyLoan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="margin-top:80px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Apply Loan Process</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <td><h6 style="margin-top:7px">Member ID</h6></td>
+                                    <td>
+                                        <p id="memid_loan" class="form-control border-secondary"></p>
+                                        <input id="dbrecno" type="hidden" class="form-control newradius">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><h6 style="margin-top:7px">Enter Amount</h6></td>
+                                    <td>
+                                        <input id="amount_loan" type="number" class="form-control newradius">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><h6 style="margin-top:7px">Interest Rate</h6></td>
+                                    <td><input id="interest_lon" type="number" class="form-control newradius"></td>
+                                </tr>
+                                <tr>
+                                    <td><h6 style="margin-top:7px">No of Months to Pay</h6></td>
+                                    <td><input id="No_pay" type="number" class="form-control newradius"></td>
+                                </tr>
+                                <tr>
+                                    <td><h6 style="margin-top:7px">Payment Start</h6></td>
+                                    <td><input id="pay_start" type="date" class="form-control newradius"></td>
+                                </tr>
+                                <tr>
+                                    <td><h6 style="margin-top:7px">Payment End</h6></td>
+                                    <td><input id="pay_end" type="date" class="form-control newradius"></td>
+                                </tr>
+                                <tr>
+                                    <td><h6 style="margin-top:7px">Date Process</h6></td>
+                                    <td><input id="date_proccess" type="date" class="form-control newradius"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" id="SaveLoanData" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*//--------View Loan Record Modal-------//*@
+    <div class="modal fade" id="ViewLoanRec" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="margin-top:80px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Loan Record Information</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body p-3">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="~/js/angular.min.js"></script>
+<script src="~/js/AngularJSController.js"></script>
+<script src="~/js/AjaxController.js"></script>
+<script src="~/js/DisplayList.js"></script>
+<script src="~/js/LoanProcess.js"></script>
+
+
+@{if (TempData["msg"] != null)
+    {
+        <script>
+            alert('@TempData["msg"]')
+        </script>
+    }
+}

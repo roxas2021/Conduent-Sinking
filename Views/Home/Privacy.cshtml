@@ -1,0 +1,67 @@
+﻿@model Sample3.Models.MemberData
+
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+
+<form>
+    <table>
+        <tr>
+            <td>MemberID</td>
+            <td><input type="text" id="txtName" /></td>
+        </tr>
+        <tr>
+            <td>amount</td>
+            <td><input type="text" id="txtGender" /></td>
+        </tr>   
+        <tr>
+            <td>Date</td>
+            <td><input type="text" id="txtCity" /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="submit" id="btnSave" value="Save" onclick="GetDataList()" /></td>
+        </tr>
+    </table>
+    <div id="get"></div>
+</form>
+
+<script src="~/js/AjaxController.js"></script>
+
+@*<script type="text/javascript">
+
+    function GetDataList() {
+
+        var create_obj = {
+            membername: 'Ferdinand'
+        }
+
+        SubmitData(create_obj)
+    }
+
+    function SubmitData(obj) {
+
+        $.ajax({
+            url: '/Home/GetData',
+            method: "Post",
+            data: obj,
+
+            success: function (data) {
+                if (data == "success") {
+                    alert("success")
+                }
+            },
+            error: function () {
+                alert(err);
+            }
+        })
+    }
+</script>*@
+
+@{if (TempData["msg"] != null)
+    {
+        <script>
+            alert('@TempData["msg"]')
+        </script>
+    }
+}

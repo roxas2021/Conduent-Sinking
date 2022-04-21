@@ -1,0 +1,115 @@
+﻿@model Sample3.Models.MemberData;
+
+@using Sample3.Controllers;
+
+@{
+    ViewData["Title"] = "Dashboard Page";
+    Layout = "/Views/Shared/_Layout2.cshtml";
+}
+
+<div class="container d-flex justify-content-center" style="">
+    <div class="row container-fluid" style="margin-top:50px">
+
+        <div class="col-sm-4 border" style="padding:20px;border-radius:10px">
+            <img src="~/icons/img_avatar.png" height="150" width="200" class="rounded-circle border mx-auto d-block" />
+            <div class="row d-flex justify-content-center">
+                <input onclick="Search_Rec()" data-toggle="modal" data-target="#SearchRecord" type="button" class="btn btn-primary" value="Search" style="margin:10px;border-radius:25px;width:100px">
+                <input data-toggle="modal" data-target="#AddnewRecord" type="button" class="btn btn-primary" value="Add New" style="margin:10px;border-radius:25px;width:100px">
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="SearchRecord" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="margin-top:80px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Search Member Record</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <h6>Enter Member ID or Name</h6>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control newradius" id="idsearch">
+                </div>
+                <div class="table-responsive">
+                    <form asp-action="SearchMember" method="get">
+                        <table class="table table-bordered table-hover" id="tblMember">
+                            <tbody id="tblmemberdata">
+                            </tbody>
+                        </table>
+                        <input asp-for="memberid" type="hidden" id="member_id" />
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button onclick="GetData()" type="button" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.Hidden("RedirectTo", Url.Action("MemberInfoView", "Home"));
+</div>
+
+<div class="modal fade" id="AddnewRecord" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="margin-top:80px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add New Member</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <h6>Member ID</h6>
+                        <input type="number" class="form-control newradius" id="memberid">
+                    </div>
+                    <div class="form-group">
+                        <h6>Select Member Type</h6>
+                        <select class="form-control" id="memtype">
+                            <option>Member</option>
+                            <option>None-Member</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <h6>Full Name</h6>
+                        <input type="text" class="form-control newradius" id="fname">
+                    </div>
+                    <div class="form-group">
+                        <h6>Contact No.</h6>
+                        <input type="number" class="form-control newradius" id="contactno">
+                    </div>
+                    <div class="form-group">
+                        <h6>Address</h6>
+                        <input class="form-control newradius" id="address">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" onclick="AddNewMember()" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/AjaxController.js"></script>
+<script src="~/js/JSConnection.js"></script>
+<script src="~/js/PageController.js"></script>
+<script src="~/js/DashboarController.js"></script>
+
+@{if (TempData["msg"] != null)
+    {
+        <script>
+            alert('@TempData["msg"]')
+        </script>
+    }
+}

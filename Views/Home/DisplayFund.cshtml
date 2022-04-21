@@ -1,0 +1,157 @@
+﻿@using Sample3.Controllers;
+
+@{
+    ViewData["Title"] = "Fund Deposit";
+    Layout = "/Views/Shared/_Layout2.cshtml";
+
+
+}
+
+<div class="container mt-4">
+    <div class="row p-sm-4" style="margin-top:50px">
+        <div class="col-sm-6">
+            <div class="container-fluid">
+                <form>
+                    <div class="form-row">
+                        <div class="col"><h6 style="margin-top:7px">Member ID :</h6></div>
+                        <div class="col"><p id="memberid" class="form-control border-secondary">@TempData["MemberID"]</p></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col"><h6 style="margin-top:7px">Loan Amount :</h6></div>
+                        <div class="col"><p id="amount" class="form-control border-secondary">@TempData["Amount"]</p></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col"><h6 style="margin-top:7px">Interest Rate :</h6></div>
+                        <div class="col"><p id="intrate" class="form-control border-secondary">@TempData["IntRate"]</p></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col"><h6 style="margin-top:7px">No of Months to Pay :</h6></div>
+                        <div class="col"><p id="nomnthpay" class="form-control border-secondary">@TempData["NoMonthsPay"]</p></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col"><h6 style="margin-top:7px">Monthly Payment/Interest :</h6></div>
+                        <div class="col"><p id="mnthlyintrate" class="form-control border-secondary">@TempData["MPINT"]</p></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col"><h6 style="margin-top:7px">Total Interest Rate :</h6></div>
+                        <div class="col"><p id="totalintrate" class="form-control border-secondary">@TempData["TIntRate"]</p></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col"><h6 style="margin-top:7px">Total Amount to Pay :</h6></div>
+                        <div class="col"><p id="totalamount" class="form-control border-secondary">@TempData["TAmountPay"]</p></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col"><h6 style="margin-top:7px">Payment Start :</h6></div>
+                        <div class="col"><p id="paystart" class="form-control border-secondary">@TempData["PaymentStart"]</p></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col"><h6 style="margin-top:7px">Payment End :</h6></div>
+                        <div class="col"><p id="payend" class="form-control border-secondary">@TempData["PaymentEnd"]</p></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col"><h6 style="margin-top:7px">Date Process :</h6></div>
+                        <div class="col"><p id="dateproc" class="form-control border-secondary">@TempData["DateProcess"]</p></div>
+                        <input id="loanrec" type="hidden" value="@TempData["LoanRec"]" />
+                    </div>
+                    <div class="modal-footer">
+                        <input onclick="LoadAddPayment()" data-toggle="modal" data-target="#AddPayment" type="button" class="btn btn-primary" value="Add Payment" style="border-radius:10px;width:auto; margin:10px">
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        @*//--------Display Transaction Record-------//*@
+        <div class="col-sm-6">
+            <div class="container">
+                <h4>List of Payment Transaction</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="PaymentTable">
+                        <thead>
+                            <tr>
+                                <th>Amount Payed</th>
+                                <th>Date Payed</th>
+                                <th>Action</th>
+                                <th style="visibility:hidden"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tpaymentdata">
+                            @{
+                                if (Model != null)
+                                {
+                                    foreach (var Data in Model)
+                                    {
+                                        <tr>
+                                            <td>@Data.amount_pay</td>
+                                            <td>@Data.date_pay</td>
+                                            <td>
+                                                <input data-toggle="modal" data-target="#AddPayment" type="button" value="Edit" onclick="EditPaymentRec()" />
+                                                <input type="button" value="Delete" onclick="DeletePayment()" />
+                                            </td>
+                                            <td style="visibility:hidden">@Data.rec_no</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    <div class="form-row">
+                        <div class="col"><h6 style="margin-top:7px">Total Amount Paid</h6></div>
+                        <div class="col"><p id="TPaid" class="form-control border-secondary">@TempData["TPaid"]</p></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col"><h6 style="margin-top:7px">Balance</h6></div>
+                        <div class="col"><p id="Balance" class="form-control border-secondary">@TempData["Balance"]</p></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        @*//--------Add Payment Modal-------//*@
+        <div class="modal fade" id="AddPayment" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="margin-top:80px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Deposit Amount</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <h6>Member ID</h6>
+                                <p class="form-control border-secondary" style="border-radius:5px">@TempData["MemberID"]</p>
+                            </div>
+                            <div class="form-group">
+                                <h6>Enter Amount</h6>
+                                <input id="amount_pay" type="number" class="form-control newradius">
+                            </div>
+                            <div class="form-group">
+                                <h6>Date Payed</h6>
+                                <input id="date_pay" type="date" class="form-control newradius">
+                                <input id="recno" type="hidden" class="form-control newradius">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" id="SavePayment" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/JSConnection.js"></script>
+<script src="~/js/PageController.js"></script>
+<script src="~/js/TransactionProcess.js"></script>
+
+@{if (TempData["msg"] != null)
+    {
+        <script>
+            alert('@TempData["msg"]')
+        </script>
+    }
+}
